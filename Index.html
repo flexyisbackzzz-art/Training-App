@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--void:#07080a;--base:#0e1014;--slab:#161820;--slab2:#1e2028;--line:#252730;--line2:#303348;--text:#d0d2e0;--dim:#5a5c70;--dim2:#3a3c50;--amber:#f5a623;--amber2:#c8820a;--red:#e8403a;--green:#27ae60;--blue:#2980ff;--teal:#00bfa5;--white:#eef0ff;--purple:#a855f7;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--void);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+.hdr{background:var(--base);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:200;}
+.hdr-top{display:flex;align-items:center;padding:10px 16px;gap:10px;border-bottom:1px solid var(--line);}
+.logo{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:6px;color:var(--amber);}
+.sess-pill{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);}
+.sess-pill span{color:var(--amber);}
+.nav-tabs{display:flex;}
+.ntab{flex:1;padding:10px 0;background:none;border:none;color:var(--dim);font-family:'Oswald',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;-webkit-tap-highlight-color:transparent;text-align:center;}
+.ntab.active{color:var(--amber);border-bottom-color:var(--amber);}
+.goal-bar{display:flex;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line);background:var(--base);}
+.goal-bar::-webkit-scrollbar{display:none;}
+.gc{flex-shrink:0;padding:7px 14px;border-right:1px solid var(--line);font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);white-space:nowrap;line-height:1.4;}
+.gc strong{display:block;color:var(--amber);font-size:0.65rem;}
+.page{display:none;padding-bottom:80px;}
+.page.active{display:block;}
+
+/* ZONE DIVIDER */
+.zone-div{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--slab2);border-top:2px solid var(--line);border-bottom:1px solid var(--line);}
+.zone-div-bar{width:4px;height:16px;border-radius:2px;flex-shrink:0;}
+.zone-div-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--dim);}
+.zone-div-sub{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim2);margin-left:auto;}
+
+/* STRIPS */
+.strip{padding:9px 16px;display:flex;align-items:flex-start;gap:9px;font-size:0.74rem;line-height:1.4;font-weight:500;border-bottom:1px solid var(--line);}
+.si{flex-shrink:0;font-size:.9rem;margin-top:1px;}
+.sb strong{display:block;font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1px;}
+.s-amber{background:rgba(245,166,35,.05);border-left:3px solid var(--amber);}.s-amber .sb{color:#c09020;}
+.s-red{background:rgba(232,64,58,.05);border-left:3px solid var(--red);}.s-red .sb{color:#b04040;}
+.s-blue{background:rgba(41,128,255,.05);border-left:3px solid var(--blue);}.s-blue .sb{color:var(--blue);}
+.s-green{background:rgba(39,174,96,.05);border-left:3px solid var(--green);}.s-green .sb{color:var(--green);}
+.s-teal{background:rgba(0,191,165,.05);border-left:3px solid var(--teal);}.s-teal .sb{color:var(--teal);}
+
+/* SESSION HERO */
+.sess-hero{padding:18px 16px 14px;border-bottom:1px solid var(--line);background:var(--base);position:relative;overflow:hidden;}
+.sess-hero::before{content:attr(data-n);position:absolute;right:-6px;top:-18px;font-family:'Oswald',sans-serif;font-weight:700;font-size:8rem;color:rgba(245,166,35,.04);line-height:1;pointer-events:none;}
+.sess-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sess-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 6px currentColor;}
+.sess-lbl{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;flex:1;}
+.int-badge{font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:3px 8px;border-radius:2px;font-weight:700;letter-spacing:.5px;flex-shrink:0;}
+.b-max{background:rgba(232,64,58,.15);color:var(--red);border:1px solid rgba(232,64,58,.3);}
+.b-str{background:rgba(41,128,255,.12);color:var(--blue);border:1px solid rgba(41,128,255,.25);}
+.b-run{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.25);}
+.b-hype{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.25);}
+.b-rest{background:rgba(90,92,112,.15);color:var(--dim);border:1px solid var(--line2);}
+.b-speed{background:rgba(0,191,165,.1);color:var(--teal);border:1px solid rgba(0,191,165,.25);}
+.sess-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.5rem;line-height:1;letter-spacing:1px;color:var(--white);margin-bottom:5px;}
+.sess-focus{font-size:0.75rem;color:var(--dim);line-height:1.5;}
+
+/* SECTIONS */
+.sec{border-bottom:1px solid var(--line);}
+.sec-head{padding:7px 16px;background:var(--slab);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;}
+.sec-bar{width:3px;height:13px;border-radius:1px;flex-shrink:0;}
+.sec-lbl{font-family:'Oswald',sans-serif;font-weight:500;font-size:0.66rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);}
+.sec-cnt{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:0.56rem;color:var(--dim2);}
+
+/* EXERCISE ROWS */
+.ex-list{padding:0;}
+.ex-row{border-bottom:1px solid rgba(37,39,48,.8);}
+.ex-row:last-child{border-bottom:none;}
+.ex-row.done .ex-main{opacity:.22;}
+.ex-main{display:flex;align-items:flex-start;gap:9px;padding:9px 16px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .12s;}
+.ex-main:active{background:var(--slab);}
+.no-tap{cursor:default;}
+.chk{width:18px;height:18px;border-radius:2px;border:1.5px solid var(--line2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;}
+.ex-row.done .chk{background:var(--green);border-color:var(--green);}
+.chk svg{display:none;}
+.ex-row.done .chk svg{display:block;}
+.ei{font-family:'Share Tech Mono',monospace;font-size:0.56rem;color:var(--dim2);width:14px;flex-shrink:0;padding-top:3px;}
+.eb{flex:1;min-width:0;}
+.en{font-size:0.86rem;font-weight:600;color:var(--text);line-height:1.2;}
+.ecs{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
+.chip{font-family:'Share Tech Mono',monospace;font-size:0.56rem;padding:2px 6px;border-radius:2px;white-space:nowrap;}
+.c-s{background:rgba(41,128,255,.1);color:var(--blue);border:1px solid rgba(41,128,255,.2);}
+.c-r{background:rgba(245,166,35,.07);color:var(--amber);border:1px solid rgba(245,166,35,.18);}
+.c-n{background:var(--slab2);color:var(--dim);border:1px solid var(--line);font-style:italic;}
+
+/* LOG */
+.ex-log{padding:4px 16px 10px 43px;}
+.log-prev{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);margin-bottom:6px;}
+.log-prev span{color:var(--amber);}
+.log-row{display:flex;gap:6px;align-items:center;}
+.log-input{flex:1;background:var(--slab2);border:1px solid var(--line2);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:0.76rem;padding:7px 8px;border-radius:3px;text-align:center;-webkit-appearance:none;}
+.log-input:focus{outline:none;border-color:var(--amber);}
+.log-input::placeholder{color:var(--dim2);}
+.log-unit{font-family:'Share Tech Mono',monospace;font-size:0.56rem;color:var(--dim);flex-shrink:0;}
+.log-btn{padding:7px 12px;background:var(--amber);border:none;color:var(--void);font-family:'Oswald',sans-serif;font-weight:700;font-size:0.68rem;letter-spacing:1px;cursor:pointer;border-radius:3px;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.log-btn:active{background:var(--amber2);}
+.prog-hint{margin-top:5px;font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:4px 8px;border-radius:2px;}
+.hint-up{background:rgba(39,174,96,.1);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+.hint-same{background:rgba(245,166,35,.07);color:var(--amber);border:1px solid rgba(245,166,35,.18);}
+
+/* PROGRESS */
+.prog-wrap{padding:10px 16px;background:var(--slab);border-top:1px solid var(--line);}
+.prog-row{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);margin-bottom:5px;}
+.prog-row span:last-child{color:var(--amber);}
+.prog-track{height:2px;background:var(--line2);}
+.prog-fill{height:100%;background:var(--amber);transition:width .3s ease;}
+
+/* BTNS */
+.btns{display:grid;grid-template-columns:1fr 2fr;border-top:1px solid var(--line);}
+.btn{padding:14px 16px;background:none;border:none;border-right:1px solid var(--line);color:var(--dim);font-family:'Oswald',sans-serif;font-weight:500;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s;-webkit-tap-highlight-color:transparent;}
+.btn:last-child{border-right:none;}
+.btn:hover{background:var(--slab);color:var(--text);}
+.btn.p{background:var(--amber);color:var(--void);font-weight:700;}
+
+/* INFO */
+.info-list{padding:8px 16px 12px;}
+.info-item{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);}
+.info-item:last-child{border-bottom:none;}
+.info-lbl{font-size:0.76rem;color:var(--dim);flex:1;line-height:1.4;}
+.info-val{font-family:'Share Tech Mono',monospace;font-size:0.7rem;text-align:right;flex-shrink:0;max-width:55%;line-height:1.4;}
+.iv-r{color:var(--red);}.iv-a{color:var(--amber);}.iv-g{color:var(--green);}
+.blist{list-style:none;padding:8px 16px 12px;}
+.blist li{display:flex;gap:8px;align-items:flex-start;font-size:0.76rem;color:var(--dim);padding:6px 0;border-bottom:1px solid var(--line);line-height:1.5;}
+.blist li:last-child{border-bottom:none;}
+.blist li::before{content:'▸';color:var(--amber);flex-shrink:0;font-size:0.68rem;margin-top:2px;}
+
+/* HIST */
+.hist-wrap{padding:14px 16px;}
+.hist-lbl{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.hi{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
+.hi:last-child{border-bottom:none;}
+.hi-line{width:2px;height:26px;border-radius:1px;flex-shrink:0;}
+.hi-info{flex:1;}.hi-name{font-size:0.8rem;font-weight:600;color:var(--text);}
+.hi-date{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--dim);margin-top:2px;}
+.hi-ok{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--green);}
+
+/* GOALS */
+.pg-head{padding:20px 16px 14px;border-bottom:1px solid var(--line);background:var(--base);}
+.pg-eye{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.pg-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.8rem;letter-spacing:2px;color:var(--white);line-height:1;margin-bottom:7px;}
+.pg-sub{font-size:0.76rem;color:var(--dim);line-height:1.5;}
+.gsec{padding:7px 16px;background:rgba(245,166,35,.05);border-bottom:1px solid var(--line);border-top:2px solid var(--line);font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:7px;}
+.gsec::before{content:'';flex:0 0 3px;height:10px;background:var(--amber);border-radius:1px;}
+.card{margin:10px 16px;background:var(--slab);border:1px solid var(--line);border-radius:3px;overflow:hidden;}
+.ch{padding:10px 14px;background:var(--slab2);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;}
+.ch h3{font-family:'Oswald',sans-serif;font-weight:600;font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;color:var(--text);flex:1;}
+.cb{padding:10px 14px;}
+.dr{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);}
+.dr:last-child{border-bottom:none;}
+.dl{font-size:0.76rem;color:var(--dim);flex:1;line-height:1.4;}
+.dv{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text);text-align:right;flex-shrink:0;max-width:58%;line-height:1.4;}
+.dv.a{color:var(--amber);}.dv.r{color:var(--red);}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-bottom:1px solid var(--line);}
+.mbox{background:var(--slab);padding:12px 14px;}
+.mval{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.7rem;letter-spacing:-1px;line-height:1;}
+.mlbl{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:1.5px;color:var(--dim);margin-top:4px;text-transform:uppercase;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line);font-size:0.72rem;text-align:left;}
+.tbl th{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);background:var(--slab2);}
+.tbl td{color:var(--dim);}.tbl td:first-child{color:var(--text);font-weight:600;}
+.tbl tr:last-child td{border-bottom:none;}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--amber);color:var(--void);padding:10px 24px;font-family:'Oswald',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;transition:transform .35s cubic-bezier(.34,1.4,.64,1);z-index:999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo">SYSTEM</div>
+    <div class="sess-pill">SESSION <span id="sessNum">1</span></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="go('training')">Training</button>
+    <button class="ntab" onclick="go('goals')">Ziele</button>
+  </div>
+</div>
+
+<div class="goal-bar">
+  <div class="gc"><strong>100M</strong>&lt;11.0s</div>
+  <div class="gc"><strong>5K</strong>&lt;18min</div>
+  <div class="gc"><strong>10K</strong>&lt;40min</div>
+  <div class="gc"><strong>HM</strong>&lt;1:30h</div>
+  <div class="gc"><strong>MARATHON</strong>&lt;3h</div>
+  <div class="gc"><strong>BENCH</strong>120kg</div>
+  <div class="gc"><strong>SQUAT</strong>160kg+</div>
+  <div class="gc"><strong>PULL-UPS</strong>20+</div>
+  <div class="gc"><strong>APPROACH</strong>350cm</div>
+  <div class="gc"><strong>STANDING</strong>335cm</div>
+  <div class="gc"><strong>KFA</strong>&lt;7–8%</div>
+  <div class="gc"><strong>ZONE2</strong>230–250W</div>
+</div>
+
+<div class="page active" id="page-training">
+  <div id="sessContent"></div>
+  <div class="hist-wrap">
+    <div class="hist-lbl">Verlauf</div>
+    <div id="hl"><div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim)">KEINE SESSIONS BISHER</div></div>
+  </div>
+</div>
+
+<div class="page" id="page-goals">
+  <div class="pg-head"><div class="pg-eye">Zieldefinition</div><div class="pg-title">ALLE ZIELE</div><div class="pg-sub">Ausgangswerte, Meilensteine, was nötig ist.</div></div>
+  <div class="gsec">Sprint & Laufen</div>
+  <div class="card"><div class="cb">
+    <div class="dr"><div class="dl">100m Sprint</div><div class="dv a">&lt; 11.0s</div></div>
+    <div class="dr"><div class="dl">5km</div><div class="dv a">&lt; 18:00 · Ø 3:36/km</div></div>
+    <div class="dr"><div class="dl">10km</div><div class="dv a">&lt; 40:00 · Ø 4:00/km</div></div>
+    <div class="dr"><div class="dl">Halbmarathon</div><div class="dv a">&lt; 1:30:00 · Ø 4:16/km</div></div>
+    <div class="dr"><div class="dl">Marathon</div><div class="dv a">&lt; 3:00:00 · Ø 4:16/km</div></div>
+  </div></div>
+  <div class="gsec">Kraft</div>
+  <div class="card"><div class="mrow">
+    <div class="mbox"><div class="mval" style="color:var(--amber)">120</div><div class="mlbl">Bench kg</div></div>
+    <div class="mbox"><div class="mval" style="color:var(--amber)">160+</div><div class="mlbl">Squat kg</div></div>
+  </div><div class="cb">
+    <div class="dr"><div class="dl">Pull-Ups (sauber)</div><div class="dv a">20+</div></div>
+    <div class="dr"><div class="dl">Bench aktuell (nach Pause)</div><div class="dv r">~70–80kg</div></div>
+    <div class="dr"><div class="dl">Squat aktuell (nach Pause)</div><div class="dv r">~110–120kg</div></div>
+  </div></div>
+  <div class="gsec">Vertikaler Sprung</div>
+  <div class="card"><div class="mrow">
+    <div class="mbox"><div class="mval" style="color:var(--red)">350cm</div><div class="mlbl">Approach Touch</div></div>
+    <div class="mbox"><div class="mval" style="color:var(--blue)">335cm</div><div class="mlbl">Standing Touch</div></div>
+  </div><div class="cb">
+    <div class="dr"><div class="dl">Standing Reach</div><div class="dv">235cm</div></div>
+    <div class="dr"><div class="dl">Vertical aktuell</div><div class="dv r">70–75cm</div></div>
+    <div class="dr"><div class="dl">Benötigter Standing Vertical</div><div class="dv a">~100cm</div></div>
+    <div class="dr"><div class="dl">Benötigter Approach Vertical</div><div class="dv a">~115cm</div></div>
+  </div></div>
+  <div class="gsec">Körper & Kondition</div>
+  <div class="card"><div class="cb">
+    <div class="dr"><div class="dl">Körperfettanteil</div><div class="dv a">&lt; 7–8%</div></div>
+    <div class="dr"><div class="dl">Zone 2 Watt @ 120–130 BPM</div><div class="dv a">230–250W</div></div>
+    <div class="dr"><div class="dl">Hypertrophie</div><div class="dv">Max — jeder Muskel</div></div>
+    <div class="dr"><div class="dl">Core</div><div class="dv">10-Pack + Obliques + Rückenstrecker</div></div>
+  </div></div>
+  <div class="gsec">Meilensteine Vertical</div>
+  <div class="card"><div class="cb">
+    <table class="tbl">
+      <tr><th>Phase</th><th>Standing</th><th>Zeitraum</th></tr>
+      <tr><td>Phase 1</td><td>80–82cm</td><td>4–6 Wochen</td></tr>
+      <tr><td>Phase 2</td><td>88–92cm</td><td>3–4 Monate</td></tr>
+      <tr><td>Phase 3</td><td>95–100cm</td><td>6–8 Monate</td></tr>
+      <tr><td>Elite</td><td>100cm+</td><td>12+ Monate</td></tr>
+    </table>
+  </div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── LAUF ROTATION (läuft automatisch, unsichtbar) ──
+const LAUF=[
+  {tag:'INTERVALL',secs:[
+    {l:'WARM-UP',c:'#555',e:[{n:'Leichtes Joggen',s:'5–8 min',r:'—',note:''},{n:'Dynamisches Dehnen',s:'3 min',r:'—',note:'Hüfte, Waden'},{n:'Strides 80%',s:'4×80m',r:'60s',note:''},]},
+    {l:'400m INTERVALLE @ 5K-PACE',c:'#27ae60',e:[{n:'400m Wiederholungen',s:'6–8×400m',r:'2min',note:'Ziel: 3:35–3:45/km'},{n:'ODER 800m Wiederholungen',s:'4–5×800m',r:'3min',note:'Gleichmäßige Splits'},]},
+  ]},
+  {tag:'TEMPO RUN',secs:[
+    {l:'WARM-UP',c:'#555',e:[{n:'Leichtes Joggen',s:'5 min',r:'—',note:''},{n:'Strides 80%',s:'3×80m',r:'60s',note:''},]},
+    {l:'TEMPO RUN (LAKTATSCHWELLE)',c:'#27ae60',e:[{n:'Kontinuierlicher Tempo Run',s:'25–40 min',r:'—',note:'4:15–4:30/km'},]},
+  ]},
+  {tag:'LONG RUN',secs:[
+    {l:'LANGER LAUF',c:'#27ae60',e:[{n:'Easy Long Run',s:'60–90 min',r:'—',note:'5:00–5:30/km · HF <70%'},]},
+  ]},
+  {tag:'ZONE 2 RUN',secs:[
+    {l:'ZONE 2 RECOVERY RUN',c:'#27ae60',e:[{n:'Zone 2 Jogging (Nasenatmung)',s:'30–45 min',r:'—',note:'5:30–6:00/km'},]},
+  ]},
+];
+
+// ── SESSIONS ───────────────────────────────────
+const S=[
+{id:'s1',color:'#00bfa5',emoji:'⚡',tag:'SPRINT + ELASTIC',title:'SPRINT & REAKTIVKRAFT',
+ intensity:'MAX',iCls:'b-speed',
+ focus:'100m-Ziel + Sprungreaktivität. ZNS-Frische absolute Pflicht.',
+ bike:'NACH — ZNS-Output darf nicht reduziert werden.',bikeCls:'s-teal',
+ stop:'Sprintzeit steigt 2× hintereinander → Session beenden.',
+ warn:'ZNS-TAG: Ausgeschlafen kommen. Gefühl unter 7/10 → Sub-Max.',
+ isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:'Achillessehne aufwärmen'},{n:'Tibialis Raises (Wand-Lean)',s:'2×20',note:''},{n:'Single-Leg Iso Calf Hold',s:'2×30s/Bein',note:''},{n:'Short Foot Aktivierung',s:'2 min',note:''},{n:'Sprunggelenk Circles',s:'2 min',note:''},],
+   schwach:[{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:'Knieschutz + Sprint'},{n:'Abduktoren — Band Side Steps',s:'2×15/Seite',note:''},{n:'VMO — Terminal Knee Ext. (Band)',s:'2×15/Bein',note:''},],
+   mobil:[{n:'Hip Flexor Lunge + Reach',s:'60s/Seite',note:''},{n:'Ankle Dorsiflexion (Knie zur Wand)',s:'2×10/Seite',note:''},{n:'A-Skips locker + Arm Swings',s:'2×20',note:'ZNS aktivieren'},],
+ },
+ secs:[
+  {l:'AKZELERATION 0–30m',c:'#00bfa5',e:[{n:'Start-Beschleunigung 10m',s:'4×10m',r:'3min',note:'Tief bleiben, max Druck'},{n:'Sprint 20m',s:'4×20m',r:'3min',note:'Max Intent ab Schritt 1'},{n:'Sprint 30m (Starthaltung)',s:'3×30m',r:'4min',note:'Körper 45° bis 20m'},]},
+  {l:'MAX SPEED 40–80m',c:'#00bfa5',e:[{n:'Flying Sprints 20m (20m Anlauf)',s:'4×20m',r:'4min',note:'Max Frequenz + Länge'},{n:'Sprint 60m',s:'3×60m',r:'5min',note:'Zielzeit <7.0s'},{n:'Sprint 80m',s:'2×80m',r:'6min',note:'Wenn Qualität hoch bleibt'},]},
+  {l:'REAKTIVKRAFT ELASTIC',c:'#00bfa5',e:[{n:'Pogos beidbeinig (max Steifheit)',s:'4×25',r:'2min',note:'GCT so kurz wie möglich'},{n:'Pogos einbeinig',s:'3×15/Bein',r:'2min',note:''},{n:'Single-Leg Hops steif',s:'3×8/Bein',r:'90s',note:'Reaktiv'},]},
+  {l:'🚴 ZONE 2 BIKE — DANACH',c:'#00bfa5',e:[{n:'Zone 2 Bike',s:'45–60 min',r:'—',note:'60–70% HFmax · Laktat-Clearance'},]},
+ ],
+ cooldown:[
+  {l:'SEHNEN PFLEGE',c:'#e8403a',e:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',r:'60s',note:'Pflicht nach Sprint'},{n:'Tibialis Raises',s:'2×20',r:'45s',note:''},{n:'Foam Roll Waden + Schienbein',s:'2 min',r:'—',note:''},]},
+  {l:'MOBILITÄT COOL DOWN',c:'#5a5c70',e:[{n:'Hip Flexor Stretch',s:'60s/Seite',r:'—',note:''},{n:'Pigeon Pose',s:'60s/Seite',r:'—',note:''},{n:'Hamstring Stretch liegend',s:'60s/Seite',r:'—',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Sprintzeit erhöht sich',val:'Stopp — ZNS leer',cls:'r'},{lbl:'Gefühl unter 6/10',val:'Sub-Max oder verschieben',cls:'a'},{lbl:'Warm-Up Sprünge niedrig',val:'Intensität reduzieren',cls:'a'},],
+   tipps:['Mindestens 48h vor nächstem Beintraining','Kollagen + Vit C 45min vor diesem Training','Viel Wasser und Kohlenhydrate nach der Session','Schlafen: 8.5–9.5h — ZNS regeneriert sich nur im Schlaf'],
+ }
+},
+{id:'s2',color:'#e8403a',emoji:'🏋️',tag:'UNTERKÖRPER KRAFT',title:'LOWER BODY MAXKRAFT',
+ intensity:'STR',iCls:'b-str',
+ focus:'160kg Squat + Vertikal-Basis. Niedrige Reps, lange Pausen.',
+ bike:'NACH — Kraft-Output bricht bei Ausdauer davor ein.',bikeCls:'s-amber',
+ stop:'Kein Satz unter 95% Qualität. Gewicht senken statt Form opfern.',warn:null,
+ isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:''},{n:'Tibialis Raises',s:'2×20',note:''},{n:'Single-Leg Iso Calf Hold',s:'2×30s/Bein',note:''},{n:'Short Foot Aktivierung',s:'2 min',note:''},],
+   schwach:[{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:'Knieschutz'},{n:'Abduktoren — Band Side Steps',s:'2×15/Seite',note:''},{n:'VMO — Terminal Knee Ext.',s:'2×15/Bein',note:'Innerer Quad'},{n:'Rotatorenmanschette — Band External Rotation',s:'2×15/Seite',note:''},],
+   mobil:[{n:'90/90 Hip Stretch',s:'2×60s/Seite',note:''},{n:'Ankle Dorsiflexion (Knie zur Wand)',s:'2×10/Seite',note:''},{n:'Hip Flexor Lunge + Reach',s:'60s/Seite',note:''},{n:'Goblet Squat locker als Aktivierung',s:'2×10',note:''},],
+ },
+ secs:[
+  {l:'WARM-UP',c:'#555',e:[{n:'Bike locker',s:'5 min',r:'—',note:''},{n:'Goblet Squat leicht',s:'2×10',r:'60s',note:'Hüftmobilität'},{n:'Glute Bridge',s:'2×15',r:'45s',note:''},{n:'Squat Ramping 50/70/85%',s:'3×3',r:'90s',note:'Vor Arbeitssätzen'},]},
+  {l:'HAUPTKRAFT',c:'#e8403a',e:[{n:'Back Squat',s:'4×3–5 @ 85–90%',r:'4–5min',note:'Explosive Concentric'},{n:'Trap Bar Deadlift',s:'3×3 @ 90%',r:'4min',note:'Hüftextension max'},{n:'Bulgarian Split Squat',s:'3×4/Bein',r:'3min',note:'Schwer, RIR 1–2'},]},
+  {l:'HINTERE KETTE',c:'#e8403a',e:[{n:'Romanian Deadlift',s:'3×6',r:'3min',note:'Voller Stretch'},{n:'Nordic Hamstring Curl',s:'3×4',r:'3min',note:'Exzentrischer Fokus'},{n:'Hip Thrust (explosiv)',s:'3×5',r:'2.5min',note:'Max Hüftextension'},]},
+  {l:'VERNACHLÄSSIGTE MUSKELN',c:'#00bfa5',e:[{n:'Adduktoren — Seated Hip Adduction',s:'3×12',r:'90s',note:'Knieschutz + Sprint'},{n:'Abduktoren — Hip Abduction Maschine',s:'3×15',r:'90s',note:''},{n:'VMO — Spanish Squat',s:'3×15',r:'75s',note:'Innerer Quad'},{n:'Single-Leg RDL',s:'3×6/Bein',r:'2min',note:'Propriozeption'},]},
+  {l:'WADEN & ANKLES',c:'#2980ff',e:[{n:'Standing Calf Raise (5s exz.)',s:'4×10',r:'2min',note:'Schwer, voller ROM'},{n:'Seated Calf Raise',s:'3×15',r:'90s',note:'Soleus'},{n:'Tibialis Raises',s:'2×20',r:'60s',note:''},]},
+  {l:'🚴 ZONE 2 BIKE — DANACH',c:'#e8403a',e:[{n:'Zone 2 Bike',s:'60 min',r:'—',note:'60–70% HFmax'},]},
+ ],
+ cooldown:[
+  {l:'COOL DOWN & DEHNEN',c:'#5a5c70',e:[{n:'Hamstring Stretch (liegend)',s:'90s/Seite',r:'—',note:''},{n:'Pigeon Pose (Hüfte)',s:'90s/Seite',r:'—',note:''},{n:'Quad Stretch stehend',s:'60s/Seite',r:'—',note:''},{n:'Child\'s Pose (unterer Rücken)',s:'2 min',r:'—',note:''},]},
+  {l:'SEHNEN PFLEGE',c:'#e8403a',e:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',r:'60s',note:'Pflicht'},{n:'Tibialis Raises',s:'2×20',r:'45s',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Ruheherzfrequenz morgens',val:'+8–10 BPM = Warnsignal',cls:'r'},{lbl:'Schlafqualität',val:'<75% → Volumen senken',cls:'a'},{lbl:'HRV-Abfall >20%',val:'Deload oder freier Tag',cls:'r'},],
+   tipps:['Nach diesem Training: 48h vor Sprint/Jump','Knieschmerzen beim Warm-Up → Gewicht −20%','Deload jede 4. Woche unabhängig vom Gefühl','Schlaf: 8.5–9.5h — Kraft wird im Schlaf aufgebaut'],
+ }
+},
+{id:'s3',color:'#2980ff',emoji:'🧱',tag:'OBERKÖRPER KRAFT',title:'OBERKÖRPER KRAFT + MASSE',
+ intensity:'STR',iCls:'b-str',
+ focus:'120kg Bench + maximale Hypertrophie jedes Oberkörpermuskels inkl. Unterarm.',
+ bike:'VOR — Kein ZNS-Nachteil. Pump durch Blutfluss ↑.',bikeCls:'s-blue',
+ stop:null,warn:null,isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:''},{n:'Tibialis Raises',s:'2×20',note:''},{n:'Sprunggelenk Circles',s:'2 min',note:''},],
+   schwach:[{n:'Rotatorenmanschette — Band External Rotation',s:'2×15/Seite',note:'Vor schwerem Drücken'},{n:'Band Pull-Apart',s:'2×20',note:'Skapula-Stabilität'},{n:'Face Pull',s:'2×20',note:'Teres Minor + Infraspinatus'},{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:''},],
+   mobil:[{n:'T-Spine Rotation (Boden)',s:'2×8/Seite',note:''},{n:'Schulter Windmühlen (arm circles)',s:'2×10/Seite',note:''},{n:'90/90 Hip Stretch',s:'2×60s/Seite',note:''},],
+ },
+ secs:[
+  {l:'🚴 ZONE 2 BIKE — DAVOR',c:'#2980ff',e:[{n:'Zone 2 Bike',s:'60 min',r:'—',note:'Davor ideal bei Oberkörper'},]},
+  {l:'KRAFT',c:'#2980ff',e:[{n:'Barbell Bench Press',s:'4×4–6 @ 85–88%',r:'3–4min',note:'Max Intent, explosive Concentric'},{n:'Weighted Pull-Ups',s:'4×4–6',r:'3–4min',note:'Volle ROM, kein Schwung'},{n:'Overhead Press',s:'3×5 @ 80%',r:'3min',note:'Schulter-Stabilität'},]},
+  {l:'BRUST HYPERTROPHIE',c:'#2980ff',e:[{n:'Incline DB Press',s:'3×8–10 RIR2',r:'2min',note:'Obere Brust'},{n:'Cable Fly (tiefer Stretch)',s:'3×12–15 RIR1',r:'90s',note:'Sternaler Fokus'},{n:'Weighted Dips',s:'3×8–10',r:'2min',note:'Untere Brust + Trizeps'},]},
+  {l:'RÜCKEN HYPERTROPHIE',c:'#2980ff',e:[{n:'Chest-Supported Row',s:'3×10–12 RIR2',r:'2min',note:'1s Halt am Ende'},{n:'Lat Pulldown (breiter Griff)',s:'3×10–12 RIR2',r:'90s',note:'Voller Stretch'},{n:'Straight-Arm Pulldown',s:'3×15',r:'75s',note:'Lat-Isolation'},{n:'Back Extension',s:'3×15',r:'90s',note:'Unterer Rücken'},]},
+  {l:'SCHULTERN (ALLE KÖPFE)',c:'#2980ff',e:[{n:'Lateral Raises',s:'4×15–20 RIR1',r:'75s',note:'Schulterbreite'},{n:'Rear Delt Cable Fly',s:'4×15',r:'75s',note:'Hinterer Kopf'},{n:'Face Pulls',s:'3×20',r:'60s',note:'Rotatorenmanschette'},{n:'Cable Front Raise',s:'2×12',r:'60s',note:'Vorderer Kopf'},]},
+  {l:'ARME + UNTERARM',c:'#2980ff',e:[{n:'EZ-Bar Curl',s:'3×8–10 RIR2',r:'90s',note:''},{n:'Incline DB Curl',s:'3×10 RIR2',r:'90s',note:'Langer Kopf Stretch'},{n:'Hammer Curl',s:'2×12',r:'75s',note:'Brachialis + Unterarm'},{n:'Skullcrusher',s:'3×8–10 RIR2',r:'90s',note:'Langer Kopf'},{n:'Rope Pushdown',s:'3×12–15 RIR1',r:'75s',note:'Lateraler Kopf'},{n:'Wrist Curls',s:'3×15',r:'60s',note:'Unterarm Flexoren'},{n:'Reverse Wrist Curls',s:'3×15',r:'60s',note:'Unterarm Extensoren'},{n:'Plate Pinch Hold',s:'3×30s',r:'60s',note:'Griffkraft'},]},
+ ],
+ cooldown:[
+  {l:'COOL DOWN OBERKÖRPER',c:'#5a5c70',e:[{n:'Brust Stretch (Türrahmen)',s:'60s/Seite',r:'—',note:''},{n:'Lats Stretch (Stange/Rack)',s:'60s/Seite',r:'—',note:''},{n:'Unterarm Flexoren Stretch',s:'60s/Seite',r:'—',note:''},{n:'Unterarm Extensoren Stretch',s:'60s/Seite',r:'—',note:''},{n:'Schulter Cross-Body Stretch',s:'60s/Seite',r:'—',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Schulter-Diskomfort',val:'Rotatorenmanschette prüfen',cls:'r'},{lbl:'Ellenbogenschmerz',val:'Gewicht −20%, Technik checken',cls:'a'},{lbl:'Kraft sinkt auf bekannten Gewichten',val:'Systemischer Stress → Deload',cls:'a'},],
+   tipps:['Immer Rotatorenmanschette-Aktivierung vor Drücken','Ellenbogen nicht zu weit auswärts beim Bench','Unterarme täglich dehnen bei hohem Volumen','9h Schlaf nach Hypertrophie-Tag für maximale Proteinsynthese'],
+ }
+},
+{id:'s4',color:'#f5a623',emoji:'🦘',tag:'POWER / MAX JUMPS',title:'POWER + MAX VERTICAL',
+ intensity:'MAX',iCls:'b-max',
+ focus:'KEY DAY. Max Sprunghöhe. 350cm Approach. Qualität absolut über Quantität.',
+ bike:'NACH — Max-Jumps brauchen 100% ZNS.',bikeCls:'s-amber',
+ stop:'STOP wenn 2 aufeinanderfolgende Sprünge unter Tagesbestleistung.',
+ warn:'KEY DAY: Maximal ausgeschlafen. Wenn ZNS müde → verschieben.',
+ isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:'Achillessehne aufwärmen — Pflicht'},{n:'Tibialis Raises',s:'2×20',note:''},{n:'Single-Leg Iso Calf Hold',s:'2×30s/Bein',note:''},{n:'Short Foot Aktivierung',s:'2 min',note:''},{n:'Sprunggelenk Circles',s:'2 min',note:''},],
+   schwach:[{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:'Landung sichern'},{n:'Abduktoren — Band Side Steps',s:'2×15/Seite',note:''},{n:'VMO — Terminal Knee Ext.',s:'2×15/Bein',note:''},],
+   mobil:[{n:'90/90 Hip Stretch',s:'2×60s/Seite',note:''},{n:'Ankle Dorsiflexion',s:'2×10/Seite',note:''},{n:'Hip Flexor Lunge + Reach',s:'60s/Seite',note:''},],
+ },
+ secs:[
+  {l:'WARM-UP SPEZIFISCH',c:'#555',e:[{n:'Pogos locker (Sehnen aufwärmen)',s:'3×20',r:'60s',note:''},{n:'Sub-Max Sprünge 70–80%',s:'5×1',r:'90s',note:'Körper kalibrieren'},{n:'Approach Walk-Through',s:'5 Wdh',r:'30s',note:'Technik ohne Max-Effort'},]},
+  {l:'DEPTH JUMPS',c:'#f5a623',e:[{n:'Depth Jumps 20cm Box',s:'3×3',r:'3min',note:'Min. Bodenkontaktzeit'},{n:'Depth Jumps 30cm Box',s:'3×3',r:'3min',note:'Nur wenn 20cm reaktiv gut'},]},
+  {l:'MAX VERTICAL STANDING',c:'#f5a623',e:[{n:'Max Vertical Jumps (Stand)',s:'8×2',r:'3min',note:'100% Intent'},{n:'Max Vertical mit 1-Schritt',s:'5×2',r:'3min',note:'Horizontale Energie nutzen'},]},
+  {l:'APPROACH JUMPS (350cm ZIEL)',c:'#f5a623',e:[{n:'3-Schritt Approach Max Jump',s:'6×2',r:'3.5min',note:'Penultimate Step aggressiv'},{n:'4–5-Schritt Approach Max Jump',s:'6×2',r:'4min',note:'Voller Anlauf + Max Intent'},{n:'Block Jump (Volleyball-spezifisch)',s:'5×1',r:'4min',note:'Volle Pause zwischen jedem'},]},
+  {l:'POWER TRANSFER',c:'#f5a623',e:[{n:'Broad Jumps Max',s:'4×3',r:'2.5min',note:'Horizontale Power'},{n:'Med Ball Overhead Throw',s:'4×4',r:'2min',note:'Triple Extension'},{n:'Bounding einbeinig',s:'3×20m',r:'2.5min',note:''},]},
+  {l:'CORE (kurz)',c:'#2980ff',e:[{n:'Pallof Press Hold',s:'3×30s/Seite',r:'60s',note:''},{n:'Dead Bug',s:'3×6/Seite',r:'60s',note:''},]},
+  {l:'🚴 ZONE 2 BIKE — DANACH',c:'#f5a623',e:[{n:'Zone 2 Bike',s:'60 min',r:'—',note:'60–70% HFmax · ZNS-Clearance'},]},
+ ],
+ cooldown:[
+  {l:'SEHNEN COOL DOWN',c:'#e8403a',e:[{n:'Exz. Calf Raises (5s runter)',s:'3×8',r:'60s',note:'Pflicht nach Sprungtraining'},{n:'Tibialis Raises',s:'2×20',r:'45s',note:''},{n:'Foam Roll Waden',s:'2 min',r:'—',note:''},]},
+  {l:'MOBILITÄT',c:'#5a5c70',e:[{n:'Hip Flexor Stretch',s:'90s/Seite',r:'—',note:''},{n:'Pigeon Pose',s:'90s/Seite',r:'—',note:''},{n:'Ankle Dorsiflexion Stretch',s:'60s/Seite',r:'—',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Sprunghöhe sinkt >5% über 3 Sessions',val:'Sofort Deload',cls:'r'},{lbl:'Gefühl unter 7/10',val:'Kein Max-Tag',cls:'a'},{lbl:'Knöchel-/Sehnenschmerz',val:'Sofort stoppen',cls:'r'},],
+   tipps:['Nie 2 Max-Jump-Sessions in 48h','Sprung-Volumen nie >+10%/Woche','Kollagen + Vit C 45min vor diesem Training','Nach Power-Day: viel essen, früh schlafen, kein Stress'],
+ }
+},
+{id:'s5',color:'#27ae60',emoji:'🏃',tag:'LAUF SESSION',title:'RUN SESSION',
+ intensity:'RUN',iCls:'b-run',
+ focus:'5K→Marathon + 100m Sprint. Rotiert automatisch: Intervall / Tempo / Long / Zone 2.',
+ bike:'NACH dem Lauf wenn gewünscht.',bikeCls:'s-green',
+ stop:'Pace bricht >10s/km ein → Lauf beenden.',
+ warn:'48h Abstand nach schwerem Beintraining.',
+ isRunSession:true,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:'Vor dem Lauf — Achilles'},{n:'Tibialis Raises',s:'2×20',note:'Shin Splints Prävention'},{n:'Short Foot Aktivierung',s:'2 min',note:''},],
+   schwach:[{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:''},{n:'VMO — Terminal Knee Ext.',s:'2×15/Bein',note:''},{n:'Abduktoren — Band Side Steps',s:'2×15/Seite',note:''},],
+   mobil:[{n:'Hip Flexor Lunge + Reach',s:'60s/Seite',note:'Vor dem Lauf wichtig'},{n:'Ankle Dorsiflexion',s:'2×10/Seite',note:''},{n:'Weltgrößter Stretch',s:'3/Seite',note:''},],
+ },
+ secs:[],
+ cooldown:[
+  {l:'SEHNEN PFLEGE NACH LAUF',c:'#e8403a',e:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',r:'60s',note:'Pflicht nach jedem Lauf'},{n:'Tibialis Raises',s:'2×20',r:'45s',note:''},{n:'Foam Roll Unterschenkel',s:'2 min',r:'—',note:''},]},
+  {l:'COOL DOWN DEHNEN',c:'#5a5c70',e:[{n:'Standing Hamstring Stretch',s:'60s/Seite',r:'—',note:''},{n:'Hip Flexor Stretch (Kniend)',s:'60s/Seite',r:'—',note:''},{n:'Waden-Stretch an der Wand',s:'60s/Seite',r:'—',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Pace sinkt trotz gleichem Effort',val:'Reduzieren oder abbrechen',cls:'a'},{lbl:'Sehnenschmerz beim Laufen',val:'Sofort stoppen',cls:'r'},{lbl:'Ruheherzfrequenz erhöht',val:'Distanz halbieren',cls:'a'},],
+   tipps:['Laufvolumen max +10%/Woche erhöhen','Nie Intervall + Long Run in 48h','Immer Sehnen-Pflege nach jedem Lauf','Laufschuhe mit ausreichend Dämpfung für lange Läufe'],
+ }
+},
+{id:'s6',color:'#a855f7',emoji:'💪',tag:'VOLUMEN + CORE',title:'VOLUMEN & 10-PACK CORE',
+ intensity:'PUMP',iCls:'b-hype',
+ focus:'Max Hypertrophie + vollständiges Core-Training. 10-Pack, Obliques, Rückenstrecker.',
+ bike:'VOR — Pump-Tag braucht keine ZNS-Frische.',bikeCls:'s-blue',
+ stop:null,warn:null,isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:''},{n:'Tibialis Raises',s:'2×20',note:''},{n:'Sprunggelenk Circles',s:'2 min',note:''},],
+   schwach:[{n:'Rotatorenmanschette — Band External Rotation',s:'2×15/Seite',note:''},{n:'Face Pull (Teres Minor)',s:'2×20',note:''},{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:''},],
+   mobil:[{n:'T-Spine Rotation',s:'2×8/Seite',note:''},{n:'Schulter Windmühlen',s:'2×8/Seite',note:''},{n:'90/90 Hip Stretch',s:'2×60s/Seite',note:''},],
+ },
+ secs:[
+  {l:'🚴 ZONE 2 BIKE — DAVOR',c:'#a855f7',e:[{n:'Zone 2 Bike',s:'60 min',r:'—',note:'Pump durch Blutfluss ↑'},]},
+  {l:'BRUST + RÜCKEN',c:'#a855f7',e:[{n:'DB Bench Press',s:'4×8–10 RIR2',r:'2min',note:''},{n:'Lat Pulldown',s:'4×10–12 RIR2',r:'2min',note:'Voller Stretch'},{n:'Cable Fly Deep Stretch',s:'3×15 RIR1',r:'90s',note:''},{n:'Seated Cable Row',s:'3×12 RIR2',r:'90s',note:'1s Halt am Ende'},{n:'Pec Deck',s:'3×15',r:'75s',note:'Squeeze'},]},
+  {l:'SCHULTERN',c:'#a855f7',e:[{n:'Lateral Raises',s:'5×15–20 RIR1',r:'75s',note:'Schulterbreite'},{n:'Rear Delt Fly',s:'4×15',r:'75s',note:''},{n:'Face Pulls',s:'3×20',r:'60s',note:''},]},
+  {l:'ARME SUPERSETS',c:'#a855f7',e:[{n:'Preacher Curl + Skullcrusher (SS)',s:'3×10–12',r:'90s',note:''},{n:'Hammer Curl + OH Triceps Ext (SS)',s:'3×12',r:'90s',note:''},{n:'Reverse Curl',s:'3×12',r:'75s',note:'Unterarm Extensoren'},]},
+  {l:'CORE — 10-PACK',c:'#2980ff',e:[{n:'Hanging Leg Raises (slow)',s:'4×12',r:'90s',note:'Kein Schwung'},{n:'Cable Crunch (heavy)',s:'4×15',r:'90s',note:''},{n:'Decline Sit-Ups (gewichtet)',s:'3×12–15',r:'90s',note:''},{n:'Russian Twists (gewichtet)',s:'3×20',r:'75s',note:'Oblique-Fokus'},{n:'Side Plank mit Hüftheben',s:'3×15/Seite',r:'75s',note:'Seitliche Obliques'},{n:'Ab Wheel Rollouts',s:'3×10–12',r:'90s',note:''},{n:'Vacuum Holds',s:'3×40s',r:'60s',note:'TVA'},]},
+  {l:'RÜCKENSTRECKER',c:'#a855f7',e:[{n:'Back Extension (gewichtet)',s:'4×12',r:'90s',note:'Erector Spinae'},{n:'Good Mornings',s:'3×10',r:'2min',note:'Unterer Rücken'},{n:'Pallof Press',s:'3×12/Seite',r:'75s',note:'Anti-Rotation'},]},
+ ],
+ cooldown:[
+  {l:'COOL DOWN',c:'#5a5c70',e:[{n:'Brust Stretch (Türrahmen)',s:'60s/Seite',r:'—',note:''},{n:'Lats Stretch',s:'60s/Seite',r:'—',note:''},{n:'Child\'s Pose (Core entspannen)',s:'2 min',r:'—',note:''},{n:'Shoulder Cross-Body Stretch',s:'60s/Seite',r:'—',note:''},]},
+ ],
+ recovery:{
+   cns:[{lbl:'Pump komplett ausgeblieben',val:'Ernährung/Schlaf prüfen',cls:'a'},{lbl:'Gelenke trotz Aufwärmen schmerzhaft',val:'Intensität reduzieren',cls:'r'},{lbl:'Motivation sehr niedrig ≥3 Tage',val:'Deload-Woche',cls:'a'},],
+   tipps:['Hypertrophie passiert beim Schlafen — 9h Ziel','Core-Training: kein Momentum, volle Exzentrik-Kontrolle','Vacuum täglich morgens nüchtern für beste Ergebnisse','Kein Alkohol — hemmt Proteinsynthese bis 72h'],
+ }
+},
+{id:'s7',color:'#5a5c70',emoji:'😴',tag:'AKTIVE ERHOLUNG',title:'REST + REGENERATION',
+ intensity:'REST',iCls:'b-rest',
+ focus:'ZNS erholen. Mobilität. Sehnen. Schwache Muskeln aktivieren.',
+ bike:'LOCKER — 30–40 min Zone 2 reicht.',bikeCls:'s-green',
+ stop:null,warn:null,isRunSession:false,
+ daily:{
+   sehnen:[{n:'Exz. Calf Raises (5s runter)',s:'2×8',note:''},{n:'Tibialis Raises',s:'2×20',note:''},{n:'Short Foot Aktivierung',s:'2 min',note:''},],
+   schwach:[{n:'Adduktoren — Copenhagen Plank',s:'2×20s/Seite',note:''},{n:'Abduktoren — Band Side Steps',s:'2×15/Seite',note:''},{n:'VMO — Terminal Knee Ext.',s:'2×15/Bein',note:''},{n:'Rotatorenmanschette — Band Ext. Rotation',s:'2×15/Seite',note:''},],
+   mobil:[{n:'90/90 Hip Stretch',s:'2×60s/Seite',note:''},{n:'Weltgrößter Stretch',s:'3/Seite',note:''},{n:'T-Spine Rotation',s:'2×8/Seite',note:''},],
+ },
+ secs:[
+  {l:'AKTIVE ERHOLUNG',c:'#5a5c70',e:[{n:'Zone 2 Bike (locker)',s:'30–40 min',r:'—',note:'Laktat-Clearance'},{n:'Mobilität Hüfte (90/90, Pigeon)',s:'15 min',r:'—',note:''},{n:'Knöchel-Mobilität',s:'10 min',r:'—',note:''},{n:'T-Spine Rotationen',s:'10 min',r:'—',note:''},]},
+  {l:'SCHWACHE MUSKELN',c:'#00bfa5',e:[{n:'Adduktoren — Band/Maschine',s:'2×15',r:'60s',note:''},{n:'Abduktoren — Band Side Walk',s:'2×15/Seite',r:'60s',note:''},{n:'Rotatorenmanschette — Band Ext. Rotation',s:'2×15/Seite',r:'60s',note:''},]},
+ ],
+ cooldown:[],
+ recovery:{
+   cns:[{lbl:'Heute ist Ruhetag',val:'Kein intensives Training',cls:'a'},{lbl:'Wenn Schlaf schlecht war',val:'Zusätzliche Erholung priorisieren',cls:'a'},{lbl:'Morgen wieder einsteigen',val:'Nur wenn Gefühl ≥7',cls:'g'},],
+   tipps:['Ruhetag = aktive Erholung, nicht Sofa','Cold Shower nach Bike: vagaler Tonus ↑','Kein Alkohol auch am Ruhetag','Checke morgen: Ruheherzfrequenz + Stimmung'],
+ }
+},
+];
+
+// ── STATE ──────────────────────────────────────
+let ST=(()=>{try{return JSON.parse(localStorage.getItem('sys_v7')||'null')||{idx:0,num:1,laufIdx:0,chk:{},logs:{},hist:[]};}catch(e){return {idx:0,num:1,laufIdx:0,chk:{},logs:{},hist:[]};}})();
+function save(){try{localStorage.setItem('sys_v7',JSON.stringify(ST));}catch(e){}}
+function K(id,si,ei){return id+':'+si+':'+ei;}
+function totalEx(secs){return secs.reduce((a,sec)=>a+sec.e.length,0);}
+function doneEx(id,secs){let d=0;secs.forEach((sec,si)=>sec.e.forEach((_,ei)=>{if(ST.chk[K(id,si,ei)])d++;}));return d;}
+function tog(k){ST.chk[k]=!ST.chk[k];save();render();}
+
+function isNoLog(ex){
+  return !ex.s||ex.s.includes('min')||ex.s==='—'||/^\d+×\d+m$/.test(ex.s)||ex.s.includes('Wdh')||ex.s.includes('optional')||ex.n.toLowerCase().includes('bike')||ex.n.toLowerCase().includes('jog')||ex.n.toLowerCase().includes('stretch')||ex.n.toLowerCase().includes('circle')||ex.n.toLowerCase().includes('foam')||ex.n.toLowerCase().includes('pose');
+}
+
+function saveLog(k,kg,reps){
+  if(!ST.logs[k])ST.logs[k]=[];
+  ST.logs[k].push({kg:parseFloat(kg)||0,reps:parseInt(reps)||0,d:new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})});
+  if(ST.logs[k].length>12)ST.logs[k].shift();
+  save();
+}
+
+function getHint(k,sets){
+  const logs=ST.logs[k];
+  if(!logs||!logs.length)return null;
+  const last=logs[logs.length-1];
+  const m=sets.match(/(\d+)[–\-](\d+)|(\d+)/);
+  const target=m?(m[2]?parseInt(m[2]):m[3]?parseInt(m[3]):10):10;
+  if(last.reps>=target&&last.reps>0){
+    const nk=Math.round((last.kg+2.5)*2)/2;
+    return {up:true,msg:'▲ STEIGERN → '+nk+'kg nächste Session'};
+  }
+  return {up:false,msg:'→ Gleiche Last: '+last.kg+'kg'};
+}
+
+function buildSecs(containerId, secs, id, noLog=false){
+  const cont=document.getElementById(containerId);
+  if(!cont)return;
+  secs.forEach((sec,si)=>{
+    const w=document.createElement('div');w.className='sec';
+    const dc=noLog?0:sec.e.filter((_,ei)=>ST.chk[K(id,si,ei)]).length;
+    w.innerHTML=`<div class="sec-head"><div class="sec-bar" style="background:${sec.c}"></div><div class="sec-lbl">${sec.l}</div>${!noLog?`<div class="sec-cnt">${dc}/${sec.e.length}</div>`:''}</div><div id="${containerId}-${si}"></div>`;
+    cont.appendChild(w);
+    const el=document.getElementById(containerId+'-'+si);
+    el.className='ex-list';
+    sec.e.forEach((ex,ei)=>{
+      const k=K(id,si,ei);
+      const isDone=!noLog&&!!ST.chk[k];
+      const logs=ST.logs[k]||[];
+      const last=logs.length?logs[logs.length-1]:null;
+      const nl=noLog||isNoLog(ex);
+      let logHTML='';
+      if(!nl){
+        const prev=last?`Letztes Mal: <span>${last.kg}kg × ${last.reps} (${last.d})</span>`:'Noch kein Log';
+        const hint=last?getHint(k,ex.s):null;
+        logHTML=`<div class="ex-log"><div class="log-prev">${prev}</div>
+          <div class="log-row">
+            <input class="log-input" id="kg-${k}" type="number" placeholder="kg" step="0.5" min="0" value="${last?last.kg:''}">
+            <div class="log-unit">kg</div>
+            <input class="log-input" id="rp-${k}" type="number" placeholder="reps" min="0">
+            <div class="log-unit">reps</div>
+            <button class="log-btn" onclick="doLog('${k}','${ex.s}')">OK</button>
+          </div>
+          ${hint?`<div class="prog-hint ${hint.up?'hint-up':'hint-same'}">${hint.msg}</div>`:''}
+        </div>`;
+      }
+      const row=document.createElement('div');
+      row.className='ex-row'+(isDone?' done':'');
+      row.innerHTML=`<div class="ex-main${noLog?' no-tap':''}"><div class="chk"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ei">${ei+1}</div><div class="eb"><div class="en">${ex.n}</div><div class="ecs"><span class="chip c-s">${ex.s}</span>${ex.r&&ex.r!=='—'?'<span class="chip c-r">⏱ '+ex.r+'</span>':''}${ex.note?'<span class="chip c-n">'+ex.note+'</span>':''}</div></div></div>${logHTML}`;
+      if(!noLog)row.querySelector('.ex-main').addEventListener('click',()=>tog(k));
+      el.appendChild(row);
+    });
+  });
+}
+
+function buildDailySecs(containerId, daily){
+  const cont=document.getElementById(containerId);
+  if(!cont)return;
+  const groups=[
+    {label:'Sehnen & Knöchel',color:'var(--teal)',items:daily.sehnen},
+    {label:'Schwache Muskeln Aktivieren',color:'var(--teal)',items:daily.schwach},
+    {label:'Mobilität & Aktivierung',color:'var(--blue)',items:daily.mobil},
+  ];
+  groups.forEach(g=>{
+    const w=document.createElement('div');w.className='sec';
+    const uid='dl-'+g.label.replace(/\s+/g,'');
+    w.innerHTML=`<div class="sec-head"><div class="sec-bar" style="background:${g.color}"></div><div class="sec-lbl">${g.label}</div></div><div class="ex-list" id="${uid}"></div>`;
+    cont.appendChild(w);
+    const el=document.getElementById(uid);
+    g.items.forEach((item,i)=>{
+      const row=document.createElement('div');row.className='ex-row';
+      row.innerHTML=`<div class="ex-main no-tap"><div class="ei">${i+1}</div><div class="eb"><div class="en">${item.n}</div><div class="ecs"><span class="chip c-s">${item.s}</span>${item.note?'<span class="chip c-n">'+item.note+'</span>':''}</div></div></div>`;
+      el.appendChild(row);
+    });
+  });
+}
+
+function buildRecSecs(containerId, recovery){
+  const cont=document.getElementById(containerId);
+  if(!cont)return;
+  const cnsW=document.createElement('div');cnsW.className='sec';
+  cnsW.innerHTML=`<div class="sec-head"><div class="sec-bar" style="background:var(--red)"></div><div class="sec-lbl">ZNS-Signale heute prüfen</div></div><div class="info-list" id="${containerId}-cns"></div>`;
+  cont.appendChild(cnsW);
+  const cnsEl=document.getElementById(containerId+'-cns');
+  recovery.cns.forEach(c=>{
+    const item=document.createElement('div');item.className='info-item';
+    item.innerHTML=`<div class="info-lbl">${c.lbl}</div><div class="info-val iv-${c.cls}">${c.val}</div>`;
+    cnsEl.appendChild(item);
+  });
+  const tipsW=document.createElement('div');tipsW.className='sec';
+  tipsW.innerHTML=`<div class="sec-head"><div class="sec-bar" style="background:var(--amber)"></div><div class="sec-lbl">Recovery Tipps für diese Session</div></div><ul class="blist" id="${containerId}-tips"></ul>`;
+  cont.appendChild(tipsW);
+  const tipsEl=document.getElementById(containerId+'-tips');
+  recovery.tipps.forEach(t=>{const li=document.createElement('li');li.textContent=t;tipsEl.appendChild(li);});
+}
+
+// ── RENDER ─────────────────────────────────────
+function render(){
+  const s=S[ST.idx];
+  document.getElementById('sessNum').textContent=ST.num;
+
+  const isRun=!!s.isRunSession;
+  const lauf=isRun?LAUF[ST.laufIdx%LAUF.length]:null;
+  const activeSecs=isRun?lauf.secs:s.secs;
+  const activeId=isRun?(s.id+'-l'+ST.laufIdx):s.id;
+
+  let html='';
+
+  // ─ 1. DAILY RITUAL ─
+  html+=`<div class="zone-div"><div class="zone-div-bar" style="background:var(--teal)"></div><div class="zone-div-title">🦵 Daily Ritual</div><div class="zone-div-sub">Jetzt starten</div></div>`;
+  html+=`<div class="strip s-teal"><span class="si">⚡</span><div class="sb"><strong>5–10 MIN VOR DEM TRAINING</strong>Sehnen, schwache Muskeln, Mobilität. Jeden Tag — auch Ruhetag.</div></div>`;
+  html+=`<div id="dailySecs"></div>`;
+
+  // ─ 2. SESSION ─
+  if(s.warn)html+=`<div class="strip s-red"><span class="si">⚠️</span><div class="sb"><strong>HINWEIS</strong>${s.warn}</div></div>`;
+  html+=`<div class="zone-div"><div class="zone-div-bar" style="background:${isRun?'#27ae60':s.color}"></div><div class="zone-div-title">${s.emoji} ${isRun?lauf.tag:s.tag}</div><div class="zone-div-sub">Session ${ST.num}</div></div>`;
+  html+=`<div class="sess-hero" data-n="0${s.num}">
+    <div class="sess-top"><div class="sess-dot" style="background:${isRun?'#27ae60':s.color};color:${isRun?'#27ae60':s.color}"></div><div class="sess-lbl">${isRun?lauf.tag:s.tag}</div><div class="int-badge ${s.iCls}">${s.intensity}</div></div>
+    <div class="sess-title">${isRun?('RUN — '+lauf.tag):s.title}</div>
+    <div class="sess-focus">${s.focus}</div>
+  </div>`;
+  html+=`<div class="strip ${s.bikeCls}"><span class="si">🚴</span><div class="sb"><strong>60 MIN ZONE 2 BIKE</strong>${s.bike}</div></div>`;
+  if(s.stop)html+=`<div class="strip s-red"><span class="si">🛑</span><div class="sb"><strong>STOP-BEDINGUNG</strong>${s.stop}</div></div>`;
+  html+=`<div id="mainSecs"></div>`;
+  html+=`<div class="prog-wrap"><div class="prog-row"><span id="pTxt">0/0</span><span id="pPct">0%</span></div><div class="prog-track"><div class="prog-fill" id="pBar" style="width:0%"></div></div></div>`;
+
+  // ─ 3. COOL DOWN ─
+  if(s.cooldown&&s.cooldown.length){
+    html+=`<div class="zone-div"><div class="zone-div-bar" style="background:var(--blue)"></div><div class="zone-div-title">🧊 Cool Down</div><div class="zone-div-sub">Direkt nach Training</div></div>`;
+    html+=`<div id="coolSecs"></div>`;
+  }
+
+  // ─ 4. RECOVERY & CNS ─
+  html+=`<div class="zone-div"><div class="zone-div-bar" style="background:var(--red)"></div><div class="zone-div-title">🧠 Recovery & CNS</div><div class="zone-div-sub">Signale + Tipps</div></div>`;
+  html+=`<div id="recSecs"></div>`;
+
+  // ─ BTNS ─
+  html+=`<div class="btns"><button class="btn" onclick="prevS()">← ZURÜCK</button><button class="btn p" onclick="completeS()">FERTIG & WEITER →</button></div>`;
+
+  document.getElementById('sessContent').innerHTML=html;
+
+  // Build daily
+  buildDailySecs('dailySecs', s.daily);
+
+  // Build main exercises
+  buildSecs('mainSecs', activeSecs, activeId);
+
+  // Build cooldown
+  if(s.cooldown&&s.cooldown.length) buildSecs('coolSecs', s.cooldown, activeId+'-cd', true);
+
+  // Build recovery
+  buildRecSecs('recSecs', s.recovery);
+
+  // Progress
+  const t=totalEx(activeSecs),d=doneEx(activeId,activeSecs),pct=t?Math.round(d/t*100):0;
+  document.getElementById('pTxt').textContent=d+' / '+t;
+  document.getElementById('pPct').textContent=pct+'%';
+  document.getElementById('pBar').style.width=pct+'%';
+
+  renderHist();
+}
+
+function doLog(k,sets){
+  const kgEl=document.getElementById('kg-'+k);
+  const rpEl=document.getElementById('rp-'+k);
+  if(!kgEl||!rpEl)return;
+  const kg=parseFloat(kgEl.value)||0;
+  const reps=parseInt(rpEl.value)||0;
+  if(kg===0&&reps===0){toast('Eingabe fehlt');return;}
+  saveLog(k,kg,reps);
+  ST.chk[k]=true;save();
+  toast('✓ '+kg+'kg × '+reps+' gespeichert');
+  render();
+}
+
+function completeS(){
+  const s=S[ST.idx];
+  const isRun=!!s.isRunSession;
+  const lauf=isRun?LAUF[ST.laufIdx%LAUF.length]:null;
+  ST.hist.unshift({
+    title:isRun?('Run — '+lauf.tag):s.title,
+    emoji:s.emoji,color:isRun?'#27ae60':s.color,tag:isRun?lauf.tag:s.tag,
+    date:new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  });
+  if(ST.hist.length>30)ST.hist.pop();
+  const activeId=isRun?(s.id+'-l'+ST.laufIdx):s.id;
+  Object.keys(ST.chk).filter(k=>k.startsWith(activeId+':')).forEach(k=>delete ST.chk[k]);
+  if(isRun)ST.laufIdx++;
+  ST.idx=(ST.idx+1)%S.length;ST.num++;
+  save();toast('SESSION ABGESCHLOSSEN');render();
+}
+
+function prevS(){ST.idx=(ST.idx-1+S.length)%S.length;save();render();}
+
+function renderHist(){
+  const hl=document.getElementById('hl');
+  if(!ST.hist.length){hl.innerHTML='<div style="font-family:\'Share Tech Mono\',monospace;font-size:0.6rem;color:var(--dim)">KEINE SESSIONS BISHER</div>';return;}
+  hl.innerHTML='';
+  ST.hist.slice(0,8).forEach(h=>{
+    const el=document.createElement('div');el.className='hi';
+    el.innerHTML=`<div class="hi-line" style="background:${h.color}"></div><div class="hi-info"><div class="hi-name">${h.emoji} ${h.title}</div><div class="hi-date">${h.tag} · ${h.date}</div></div><div class="hi-ok">✓ DONE</div>`;
+    hl.appendChild(el);
+  });
+}
+
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.ntab')[id==='training'?0:1].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+render();
+</script>
+</body>
+</html>
